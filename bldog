@@ -18,7 +18,7 @@ CopyrightLogo='
 ==========================================================================';
 echo "$CopyrightLogo";
 echo 
-
+echo "授权账户注册地址：gl.97cn.net"
 if [[ ! -e /dev/net/tun ]] ;then
 	echo -e "\033[0;31;1mtun网卡未开启\033[0m"
 	exit
@@ -32,7 +32,7 @@ mkdir /etc/openvpn
 echo "更新软件源（该过程大概5-20分钟,请勿回车）..."
 yum -y update >/dev/null 2>&1
 echo "部署成功匹配系统中（该过程也很慢,大概10分钟，请勿回车）..."
-wget https://od.lk/s/NTNfMzczNzUxNl8/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm >/dev/null 2>&1
 rpm -Uvh rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm >/dev/null 2>&1
 yum makecache >/dev/null 2>&1
 yum -y install httpd php php-mysql httpd-manual mod_ssl mod_perl mod_auth_mysql php-mcrypt php-gd php-xml php-mbstring php-ldap php-pear php-xmlrpc mysql-connector-odbc mysql-devel libdbi-dbd-mysql >/dev/null 2>&1
@@ -94,20 +94,52 @@ if [[ ${choose%%\ *} == 1 ]]
     then
 echo ip=$myip >2
 echo "#!/bin/sh" >1
-wget https://od.lk/s/NTNfMzczNzUwNV8/3 >/dev/null 2>&1
-wget https://od.lk/s/NTNfMzczNzUwNl8/5 >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/cc/3 >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/cc/5 >/dev/null 2>&1
 cat 1 2 3 >logout.sh
 cat 1 2 5 >login.sh
+
+echo "安装Mysql数据库中.....（请勿回车，大概5-20分钟）"
+#yum -y remove mysql-* >/dev/null 2>&1
+#rpm -e mysql-libs --nodeps
+#yum -y remove mysql mysql-devel
+#rpm -Uvh https://oa9l8uvo8.qnssl.com/xz/MySQL-shared-5.5.50-1.x86_64.rpm
+#rpm -Uvh https://oa9l8uvo8.qnssl.com/xz/MySQL-client-5.5.50-1.x86_64.rpm
+#rpm -Uvh https://oa9l8uvo8.qnssl.com/xz/MySQL-server-5.5.50-1.x86_64.rpm
+#rpm -Uvh https://oa9l8uvo8.qnssl.com/xz/MySQL-devel-5.5.50-1.x86_64.rpm
+
+rpm -e mysql-libs --nodeps
+rpm -Uvh https://oa9l8uvo8.qnssl.com/epel/6/i386/epel-release-6-8.noarch.rpm >/dev/null 2>&1
+rpm -Uvh https://oa9l8uvo8.qnssl.com/enterprise/remi-release-6.rpm >/dev/null 2>&1
+yum --enablerepo=remi,remi-test list mysql mysql-server >/dev/null 2>&1
+yum --enablerepo=remi,remi-test install -y mysql mysql-server >/dev/null 2>&1
+/etc/init.d/mysqld start >/dev/null 2>&1
+chkconfig --levels 345 mysqld on >/dev/null 2>&1
+
+
+#service mysql restart 
+echo "新建数据库中长时间等待按回车....."
+mysqladmin -u root password 'root' >/dev/null 2>&1
+mysql -u root -proot << EOF 2>/dev/null
+create database ov
+EOF
+service mysql restart >/dev/null 2>&1
+echo
 cd /etc/openvpn
 mkdir web
 cd web
 echo "部署网站服务器..."
-wget wget -c -O web.zip "http://yqall02.baidupcs.com/file/bb3a5a15e0be125c4942c85eafe44bdb?bkt=p3-1400bb3a5a15e0be125c4942c85eafe44bdb7cfc42b8000000122b73&fid=103220121-250528-264022615284381&time=1469527122&sign=FDTAXGERLBH-DCb740ccc5511e5e8fedcff06b081203-ivJ48TM7txL7BJEf1UBQvrdqIM8%3D&to=yqhb&fm=Yan,B,T,t&sta_dx=1&sta_cs=0&sta_ft=zip&sta_ct=0&fm2=Yangquan,B,T,t&newver=1&newfm=1&secfm=1&flow_ver=3&pkey=1400bb3a5a15e0be125c4942c85eafe44bdb7cfc42b8000000122b73&sl=75694159&expires=8h&rt=sh&r=419869485&mlogid=4818287230018550867&vuk=103220121&vbdid=2492648996&fin=web.zip&fn=web.zip&slt=pm&uta=0&rtype=1&iv=0&isw=0&dp-logid=4818287230018550867&dp-callid=0.1.1" >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/web.zip >/dev/null 2>&1
 unzip -o web.zip >/dev/null 2>&1
 chmod 777 ./*.php >/dev/null 2>&1
 chmod 777 /etc/openvpn/web/res/openvpn-status.txt >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/httpd.conf >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/php.ini >/dev/null 2>&1
+cp -rf /etc/openvpn/web/httpd.conf /etc/httpd/conf/httpd.conf
+cp -rf /etc/openvpn/web/php.ini /etc/php.ini
+service httpd restart >/dev/null 2>&1
 yum -y install telnet >/dev/null 2>&1
-wget https://od.lk/s/NTNfMzczNzUxNF8/peizhi.cfg -O /etc/openvpn/peizhi.cfg >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/jiankong/peizhi.cfg -O /etc/openvpn/peizhi.cfg >/dev/null 2>&1
 echo "正在准备生成购买配置，请复制提示所需地址在shell中粘贴！新手不建议手工录入"
 sleep 3
 echo -n "请输入购买卡密链接：(回车略过即可) "
@@ -134,15 +166,15 @@ echo "请输入老服务器IP："
 read old
 echo ip=$old >2
 echo "#!/bin/sh" >1
-wget https://od.lk/s/NTNfMzczNzUwNV8/3 >/dev/null 2>&1
-wget https://od.lk/s/NTNfMzczNzUwNl8/5 >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/cc/3 >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/cc/5 >/dev/null 2>&1
 cat 1 2 3 >logout.sh
 cat 1 2 5 >login.sh
 cd /etc/openvpn
 mkdir web
 cd web
 echo "部署服务器..."
-wget https://od.lk/s/NTNfMzczNzUxMF8/httpd.conf >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/httpd.conf >/dev/null 2>&1
 cp -rf /etc/openvpn/web/httpd.conf /etc/httpd/conf/httpd.conf
 service httpd restart >/dev/null 2>&1
 fi
@@ -158,12 +190,12 @@ rm -f logout.sh~ >/dev/null 2>&1
 chmod 777 /etc/openvpn/login.sh
 chmod 777 /etc/openvpn/logout.sh
 yum -y install telnet >/dev/null 2>&1
-wget https://od.lk/s/NTNfMzczNzUxNF8/peizhi.cfg -O /etc/openvpn/peizhi.cfg >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/jiankong/peizhi.cfg -O /etc/openvpn/peizhi.cfg >/dev/null 2>&1
 mkdir /etc/openvpn/web/res >/dev/null 2>&1
-wget https://od.lk/s/NTNfMzczNzUxMV8/jiankong -O /etc/openvpn/web/res/jiankong >/dev/null 2>&1
-wget https://od.lk/s/NTNfMzczNzUxN18/sha -O /etc/openvpn/web/res/sha >/dev/null 2>&1
-wget https://od.lk/s/NTNfMzczNzUxMl8/openvpn-status.log -O /etc/openvpn/web/res/openvpn-status.log >/dev/null 2>&1
-wget https://od.lk/s/NTNfMzczNzUxM18/openvpn-status.txt -O /etc/openvpn/web/res/openvpn-status.txt >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/jiankong/jiankong -O /etc/openvpn/web/res/jiankong >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/jiankong/sha -O /etc/openvpn/web/res/sha >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/jiankong/openvpn-status.log -O /etc/openvpn/web/res/openvpn-status.log >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/jiankong/openvpn-status.txt -O /etc/openvpn/web/res/openvpn-status.txt >/dev/null 2>&1
 chmod 777 /etc/openvpn/web/res/openvpn-status.log 2>&1
 chmod 777 /etc/openvpn/web/res/openvpn-status.txt 2>&1
 chmod 777 /etc/openvpn/web/res/jiankong 2>&1
@@ -175,13 +207,13 @@ nohup /etc/openvpn/web/res/jiankong >>/etc/openvpn/web/res/jiankong.log 2>&1 &
 
 echo “安装openvpn”
 cd /etc/openvpn/
-wget https://od.lk/s/NTNfMzczNzUwOF8/easy-rsa.tar.gz >/dev/null 2>&1
+wget https://oa9l8uvo8.qnssl.com/easy-rsa.tar.gz >/dev/null 2>&1
 tar -zxvf easy-rsa.tar.gz >/dev/null 2>&1
 
 
 echo "开始编译代理程序……"
 cd /root/
-wget --no-check-certificate https://od.lk/s/NTNfMzczNzUwMl8/mproxy.c >/dev/null 2>&1
+wget --no-check-certificate https://coding.net/u/qq1627015681/p/111/git/raw/master/mproxy.c >/dev/null 2>&1
 sleep 1
 rm -f /bin/xx >/dev/null 2>&1
 gcc -DPORTS=$_dc -o /bin/xx mproxy.c >/dev/null 2>&1
