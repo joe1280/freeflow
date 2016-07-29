@@ -35,10 +35,10 @@ echo "部署成功匹配系统中（该过程也很慢,大概10分钟，请勿�
 wget https://oa9l8uvo8.qnssl.com/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm >/dev/null 2>&1
 rpm -Uvh rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm >/dev/null 2>&1
 yum makecache >/dev/null 2>&1
-yum -y install httpd php php-mysql httpd-manual mod_ssl mod_perl mod_auth_mysql php-mcrypt php-gd php-xml php-mbstring php-ldap php-pear php-xmlrpc mysql-connector-odbc mysql-devel libdbi-dbd-mysql >/dev/null 2>&1
+#yum -y install httpd php php-mysql httpd-manual mod_ssl mod_perl mod_auth_mysql php-mcrypt php-gd php-xml php-mbstring php-ldap php-pear php-xmlrpc mysql-connector-odbc mysql-devel libdbi-dbd-mysql >/dev/null 2>&1
 yum install -y tar zip vim gcc-c++ gcc g++ make curl wget unzip iptables openssl openvpn lzop git clang >/dev/null 2>&1
-chkconfig httpd on >/dev/null 2>&1
-service httpd start >/dev/null 2>&1
+#chkconfig httpd on >/dev/null 2>&1
+#service httpd start >/dev/null 2>&1
 
 
 _vpn_port="440"
@@ -99,31 +99,6 @@ wget https://oa9l8uvo8.qnssl.com/cc/5 >/dev/null 2>&1
 cat 1 2 3 >logout.sh
 cat 1 2 5 >login.sh
 
-echo "安装Mysql数据库中.....（请勿回车，大概5-20分钟）"
-#yum -y remove mysql-* >/dev/null 2>&1
-#rpm -e mysql-libs --nodeps
-#yum -y remove mysql mysql-devel
-#rpm -Uvh https://oa9l8uvo8.qnssl.com/xz/MySQL-shared-5.5.50-1.x86_64.rpm
-#rpm -Uvh https://oa9l8uvo8.qnssl.com/xz/MySQL-client-5.5.50-1.x86_64.rpm
-#rpm -Uvh https://oa9l8uvo8.qnssl.com/xz/MySQL-server-5.5.50-1.x86_64.rpm
-#rpm -Uvh https://oa9l8uvo8.qnssl.com/xz/MySQL-devel-5.5.50-1.x86_64.rpm
-
-rpm -e mysql-libs --nodeps
-rpm -Uvh https://oa9l8uvo8.qnssl.com/epel/6/i386/epel-release-6-8.noarch.rpm >/dev/null 2>&1
-rpm -Uvh https://oa9l8uvo8.qnssl.com/enterprise/remi-release-6.rpm >/dev/null 2>&1
-yum --enablerepo=remi,remi-test list mysql mysql-server >/dev/null 2>&1
-yum --enablerepo=remi,remi-test install -y mysql mysql-server >/dev/null 2>&1
-/etc/init.d/mysqld start >/dev/null 2>&1
-chkconfig --levels 345 mysqld on >/dev/null 2>&1
-
-
-#service mysql restart 
-echo "新建数据库中长时间等待按回车....."
-mysqladmin -u root password 'root' >/dev/null 2>&1
-mysql -u root -proot << EOF 2>/dev/null
-create database ov
-EOF
-service mysql restart >/dev/null 2>&1
 echo
 cd /etc/openvpn
 mkdir web
@@ -133,11 +108,6 @@ wget https://oa9l8uvo8.qnssl.com/web.zip >/dev/null 2>&1
 unzip -o web.zip >/dev/null 2>&1
 chmod 777 ./*.php >/dev/null 2>&1
 chmod 777 /etc/openvpn/web/res/openvpn-status.txt >/dev/null 2>&1
-wget https://oa9l8uvo8.qnssl.com/httpd.conf >/dev/null 2>&1
-wget https://oa9l8uvo8.qnssl.com/php.ini >/dev/null 2>&1
-cp -rf /etc/openvpn/web/httpd.conf /etc/httpd/conf/httpd.conf
-cp -rf /etc/openvpn/web/php.ini /etc/php.ini
-service httpd restart >/dev/null 2>&1
 yum -y install telnet >/dev/null 2>&1
 wget https://oa9l8uvo8.qnssl.com/jiankong/peizhi.cfg -O /etc/openvpn/peizhi.cfg >/dev/null 2>&1
 echo "正在准备生成购买配置，请复制提示所需地址在shell中粘贴！新手不建议手工录入"
@@ -174,9 +144,6 @@ cd /etc/openvpn
 mkdir web
 cd web
 echo "部署服务器..."
-wget https://oa9l8uvo8.qnssl.com/httpd.conf >/dev/null 2>&1
-cp -rf /etc/openvpn/web/httpd.conf /etc/httpd/conf/httpd.conf
-service httpd restart >/dev/null 2>&1
 fi
 cd /etc/openvpn
 gzexe login.sh >/dev/null 2>&1
@@ -357,5 +324,4 @@ vpn >/dev/null 2>/dev/null
 echo "服务安装完毕"
 echo -e "你的配置文件为：\033[0;32;1m http://$myip/bldog.tar.gz\033[0m，请复制到浏览器下载"
 vpn
-
 rm -rf /install
