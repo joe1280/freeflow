@@ -31,7 +31,7 @@ mkdir /etc/openvpn
 echo "更新软件源（该过程大概5-20分钟,请勿回车）..."
 yum -y update >/dev/null 2>&1
 echo "部署成功匹配系统中（该过程也很慢,大概10分钟，请勿回车）..."
-wget https://github.com/joe1280/freeflow/raw/master/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm >/dev/null 2>&1
+wget http://7xr8vu.dl1.z0.glb.clouddn.com/epel-release-6-8.noarch.rpm  >/dev/null 2>&1
 rpm -Uvh rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm >/dev/null 2>&1
 yum makecache >/dev/null 2>&1
 yum -y install httpd php php-mysql httpd-manual mod_ssl mod_perl mod_auth_mysql php-mcrypt php-gd php-xml php-mbstring php-ldap php-pear php-xmlrpc mysql-connector-odbc mysql-devel libdbi-dbd-mysql >/dev/null 2>&1
