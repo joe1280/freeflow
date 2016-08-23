@@ -17,14 +17,9 @@ CopyrightLogo='
 
 				采用SSR+ss-panel2流控管理系统
 		
-							Powered by 铭哥 2016
+				
 							
-					授权地址http://tss9.cn/ss
-		   
-							All Rights Reserved
-							
-				我们的官方网站 http://tss9.cn
-		 
+			
 									    
 	              	
 ==========================================================================';
@@ -43,32 +38,6 @@ echo
 echo -n "[本机IP：$IPAddress]：请到 http://tss9.cn/ss/  进行授权，已授权请回车 "
 read 
 #KSH=`wget ${web}${MirrorHost}/ss/api.php?url=${IPAddress} -O - -q ; echo`;
-KSH =1;
-if [ "$KSH" = "1" ] ;then
-	echo 
-	echo 授权成功！[本机IP：$IPAddress]
-    else
-	echo
-	echo "授权失败！"
-OPW='
-==========================================================================
-			 服务授权失败，安装被终止
-			
-			可能原因是您的ip未被授权
-			
-			授权地址http://tss9.cn/ss/
- 
-			ShadowSocks多用户管理系统安装失败 			       
-			      Powered by 铭哥 2016
-			         
-                   All Rights Reserved	
-					   
-					
-==========================================================================';
-echo "$OPW";
-exit 0;
-fi
-echo
 function InputIPAddress()
 {
 	if [ "$IPAddress" == '' ]; then
