@@ -105,8 +105,8 @@ rm -rf /passwd
 rm -rf /var/www/html
 echo "安装执行命令...（正在后台安装，请耐心等待）"
 yum remove -y squid openvpn httpd >/dev/null 2>&1
-rpm -ivh https://github.com/joe1280/freeflow/blob/VPN/epel-release-6-8.noarch.rpm  >/dev/null 2>&1
-rpm -ivh https://github.com/joe1280/freeflow/blob/VPN/remi-release-6.rpm  >/dev/null 2>&1
+rpm -ivh https://github.com/joe1280/freeflow/raw/VPN/epel-release-6-8.noarch.rpm  >/dev/null 2>&1
+rpm -ivh https://github.com/joe1280/freeflow/raw/VPN/remi-release-6.rpm  >/dev/null 2>&1
 yum install -y redhat-lsb curl gawk tar httpd-devel unzip telnet expect
 # Ademl.com
 CO='
@@ -189,10 +189,10 @@ yum install -y squid openssl openssl-devel lzo lzo-devel pam pam-devel automake 
 yum install -y openvpn
 # OpenVPN Installing ****************************************************************************
 cd /etc/openvpn/
-wget https://github.com/joe1280/freeflow/blob/VPN/server-passwd.zip >/dev/null 2>&1
+wget https://github.com/joe1280/freeflow/raw/VPN/server-passwd.zip >/dev/null 2>&1
 unzip ${vpns}
 rm -rf /etc/openvpn/${vpns}
-wget https://github.com/joe1280/freeflow/blob/VPN/EasyRSA-2.2.2.zip >/dev/null 2>&1
+wget https://github.com/joe1280/freeflow/raw/VPN/EasyRSA-2.2.2.zip >/dev/null 2>&1
 unzip ${RSA} >/dev/null 2>&1
 rm -rf /etc/openvpn/${RSA}
 cd /etc/squid/
@@ -255,7 +255,7 @@ service php-fpm start
 sleep 1
 service httpd restart
 cd /var/www/html
-wgethttps://github.com/joe1280/freeflow/blob/VPN/phpmyadmin.zip >/dev/null 2>&1
+wget https://github.com/joe1280/freeflow/raw/VPN/phpmyadmin.zip >/dev/null 2>&1
 unzip phpmyadmin.zip >/dev/null 2>&1 
 rm -f phpmyadmin.zip
 service httpd restart
@@ -277,8 +277,8 @@ sed -i "s/admin/$mysqlpass/g" /etc/openvpn/disconnect.sh
 sed -i "s/admin/$mysqlpass/g" /etc/openvpn/login.sh
 sleep 1
 cd /var/www/html
-wget https://github.com/joe1280/freeflow/blob/VPN/web.zip >/dev/null 2>&1
-unzip web.zip >/dev/null 2>&1 
+wget https://github.com/joe1280/freeflow/raw/VPN/web2.zip >/dev/null 2>&1
+unzip web2.zip >/dev/null 2>&1 
 sed -i "17s/root/$mysqlpass/" /var/www/html/Common/Conf/config.php >/dev/null 2>&1
 cd /
 mysqladmin -u root password $mysqlpass 
@@ -286,7 +286,7 @@ mysql -uroot -p$mysqlpass -e"CREATE DATABASE ov;"
 cd /var/www/html
 mysql -uroot -p$mysqlpass ov < ov.sql
 rm -f ov.sql
-rm -f ./web.zip
+rm -f ./web2.zip
 # OpenVPN Installing ****************************************************************************
 echo "正在加入实时监控..."
 sleep 1
@@ -377,7 +377,7 @@ connect-retry 5
 resolv-retry 60
 ########免流代码########
 remote wap.10086.cn 80 
-http-proxy-option EXT1 POST http://wap.10086.cn 
+http-proxy-option EXT1 POST http://wap.gd.10086.cn 
 http-proxy-option EXT1 VPN 127.0.0.1:443
 http-proxy-option EXT1 Host: wap.10086.cn / HTTP/1.1' >ovpn.1
 echo 写入代理端口 （$IPAddress:$port）
