@@ -1,0 +1,684 @@
+#!/bin/bash
+rm -rf vpn6.sh
+web="http://"; 
+webs="https://"; 
+error="Authorization failure."; 
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH 
+clear; 
+cd /
+# Logo	******************************************************************
+CopyrightLogo='
+==========================================================================
+                                                                         
+               OpenVPN-2.3.10 云免服务器（Centos6）
+			   
+                  Powered by tss9.cn 2016 
+				  
+                      All Rights Reserved                                
+                                                                         
+                                by 铭哥 2016
+								
+					我们的官方网站 tss9.cn
+					
+                  贝塔社区：www.mlbeta.com               
+==========================================================================';
+echo "$CopyrightLogo";
+# FILES  ******************************************************************
+IPAddress=`wget http://members.3322.org/dyndns/getip -O - -q ; echo`;
+c532=64-epel-release-5-4.noarch.rpm;
+c564=32-epel-release-5-4.noarch.rpm;
+c632=32-epel-release-6-8.noarch.rpm;
+c664=epel-release-6-8.noarch.rpm;
+c700=epel-release-latest-7.noarch.rpm;
+sysctl=sysctl.conf;
+vpns=server-passwd.zip;
+sq=squid.conf;
+minggeml=/etc/openvpn/easy-rsa/minggeml;
+squsername=root
+sqpasswd=minggeml;
+VPNFILE=openvpn.zip;
+RSA=EasyRSA-2.2.2.zip;
+# VAR	******************************************************************
+Model=$1;
+Froms=$2;
+MirrorHost='tss9.cn';
+ServerLocation=`wget ${web}${MirrorHost}/op/ip.php?url=${IPAddress} -O - -q ; echo`;
+port=8080;
+vpnport=443;
+#==========================================================================
+echo 
+echo "脚本已由阿里云/腾讯云等正规vps测试通过"
+echo 
+echo -n "[本机IP：$IPAddress]：已授权请回车 "
+function InputIPAddress()
+{
+	if [ "$IPAddress" == '' ]; then
+		echo '无法检测您的IP';
+		read -p '请输入您的公网IP:' IPAddress;
+		[ "$IPAddress" == '' ] && InputIPAddress;
+	fi;
+	[ "$IPAddress" != '' ] && echo -n '[  OK  ] 您的IP是:' && echo $IPAddress;
+	sleep 2
+}
+# Ademl
+echo "系统正在安装OpenVPN服务，请耐心等待："
+echo 
+echo -n "正在检测网卡..."
+if [ ! -e "/dev/net/tun" ];
+    then
+	    echo
+		echo "安装被终止！"
+	echo "TUN/TAP网卡未开启，请联系服务商开启TUN/TAP。"
+		echo
+	exit 0;
+	else
+	    echo "		   [  OK  ]"
+fi
+echo
+echo -n "请输入数据库密码(默认root)： "
+read mysqlpass
+if [ -z $mysqlpass ]
+then
+echo  "数据库密码：root"
+mysqlpass=root
+else
+        echo "数据库密码：$mysqlpass"
+        fi
+echo -n "请设置流量监控秒数（推荐60秒，太低导致服务器崩溃！默认60秒）： "
+read shijian
+if [ -z $shijian ]
+then
+echo  "监控秒数：60"
+shijian=60
+else
+        echo "监控秒数：$shijian"
+        fi
+echo "正在部署环境..."
+service openvpn stop >/dev/null 2>&1
+killall squid >/dev/null 2>&1
+rm -rf /etc/openvpn/*
+rm -rf /home/openvpn.zip
+rm -rf /etc/squid
+rm -rf /etc/httpd/conf/httpd.conf
+rm -rf /passwd
+rm -rf /var/www/html
+echo "安装执行命令...（正在后台安装，请耐心等待）"
+yum remove -y squid openvpn httpd >/dev/null 2>&1
+rpm -ivh https://github.com/joe1280/freeflow/blob/VPN/epel-release-6-8.noarch.rpm  >/dev/null 2>&1
+rpm -ivh https://github.com/joe1280/freeflow/blob/VPN/remi-release-6.rpm  >/dev/null 2>&1
+yum install -y redhat-lsb curl gawk tar httpd-devel unzip telnet expect
+# Ademl.com
+CO='
+==========================================================================
+			安装被终止,请在Centos 6 系统上执行操作
+ 
+			OpenVPN-2.3.10 安装失败 			       
+			Powered by tss9.cn 2016			         
+				All Rights Reserved	
+					   
+					
+==========================================================================';
+version=`lsb_release -a | grep -e Release|awk -F ":" '{ print $2 }'|awk -F "." '{ print $1 }'`
+echo "正在匹配软件源..."
+if [ $version == "5" ];then
+	echo "安装终止，当前系统版本为——CentOS 5"
+	echo "$CO";
+exit
+    fi
+if [ $version == "6" ];then
+	echo "正在开始安装，当前系统版本为——CentOS 6"
+	fi
+	if [ $version == "7" ];then
+	echo "安装终止，当前系统版本为——CentOS 7"
+	echo "$CO";
+exit
+    fi
+if [ ! $version ];then
+    echo 
+    echo "安装被终止，请在Centos系统上执行操作..."
+	echo "$CO";
+exit
+fi
+echo "检查并更新软件..."
+sleep 3
+yum update -y
+# OpenVPN Installing ****************************************************************************
+echo "配置网络环境..."
+sleep 3
+iptables -F >/dev/null 2>&1
+service iptables save >/dev/null 2>&1
+service iptables restart >/dev/null 2>&1
+iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE >/dev/null 2>&1
+iptables -A INPUT -p TCP --dport 3389 -j ACCEPT >/dev/null 2>&1
+iptables -A INPUT -p TCP --dport 3306 -j ACCEPT >/dev/null 2>&1
+iptables -A INPUT -p TCP --dport 8080 -j ACCEPT >/dev/null 2>&1
+iptables -A INPUT -p TCP --dport 8888 -j ACCEPT >/dev/null 2>&1
+iptables -A INPUT -p TCP --dport 80 -j ACCEPT >/dev/null 2>&1
+iptables -A INPUT -p TCP --dport 443 -j ACCEPT >/dev/null 2>&1
+iptables -A INPUT -p TCP --dport 22 -j ACCEPT >/dev/null 2>&1
+iptables -t nat -A POSTROUTING -j MASQUERADE >/dev/null 2>&1
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT >/dev/null 2>&1
+service iptables save
+service iptables restart
+chkconfig iptables on
+setenforce 0
+# OpenVPN Installing ****************************************************************************
+cd /etc/
+rm -rf ./sysctl.conf
+		echo "net.ipv4.ip_forward = 1
+net.ipv4.conf.default.rp_filter = 1
+net.ipv4.conf.default.accept_source_route = 0
+kernel.sysrq = 0
+kernel.core_uses_pid = 1
+net.ipv4.tcp_syncookies = 1
+net.bridge.bridge-nf-call-ip6tables = 0
+net.bridge.bridge-nf-call-iptables = 0
+net.bridge.bridge-nf-call-arptables = 0
+kernel.msgmnb = 65536
+kernel.msgmax = 65536
+kernel.shmmax = 68719476736
+kernel.shmall = 4294967296
+" >./${sysctl}
+	chmod 0755 ./${sysctl}
+		sysctl -p >/dev/null 2>&1
+# OpenVPN Installing ****************************************************************************
+echo "正在安装主程序..."
+sleep 3
+yum install -y squid openssl openssl-devel lzo lzo-devel pam pam-devel automake pkgconfig
+yum install -y openvpn
+# OpenVPN Installing ****************************************************************************
+cd /etc/openvpn/
+wget https://github.com/joe1280/freeflow/blob/VPN/server-passwd.zip >/dev/null 2>&1
+unzip ${vpns}
+rm -rf /etc/openvpn/${vpns}
+wget https://github.com/joe1280/freeflow/blob/VPN/EasyRSA-2.2.2.zip >/dev/null 2>&1
+unzip ${RSA} >/dev/null 2>&1
+rm -rf /etc/openvpn/${RSA}
+cd /etc/squid/
+rm -rf ./${sq}
+rm -rf ./squid_passwd
+echo "正在启用HTTP代理端口..."
+sleep 2
+echo "auth_param basic program /usr/lib64/squid/ncsa_auth /etc/squid/squid_passwd
+auth_param basic children 5  
+auth_param basic realm Welcome to pycredit's proxy-only web server 
+acl SSL_ports port 443
+acl Safe_ports port 80
+acl Safe_ports port 21
+acl Safe_ports port 443
+acl Safe_ports port 70
+acl Safe_ports port 210
+acl Safe_ports port 1025-65535
+acl Safe_ports port 280
+acl Safe_ports port 488
+acl Safe_ports port 591
+acl Safe_ports port 777
+acl CONNECT method CONNECT
+acl squid_user proxy_auth REQUIRED
+via off
+request_header_access X-Forwarded-For deny all
+request_header_access user-agent  deny all
+reply_header_access X-Forwarded-For deny all
+reply_header_access user-agentdeny all
+http_port 80
+http_access allow squid_user
+http_access deny all
+cache_dir ufs /var/spool/squid 100 16 256 read-only
+cache_mem 0 MB
+coredump_dir /var/spool/squid
+access_log /var/log/squid/access.log
+visible_hostname TD-LTE/FDD-LTE(minggeml.win)
+cache_mgr Welcome_to_use_OpenVPN_For_minggeml.win
+# minggeml.win" >squid.conf
+		chmod 0755 squid.conf
+echo "正在加密HTTP Proxy代理端口..."
+chmod 777 /etc/openvpn/easy-rsa/minggeml
+cd /etc/squid/
+${minggeml} squid_passwd ${squsername} ${sqpasswd}
+chmod 0755 squid.conf squid_passwd
+# OpenVPN Installing ****************************************************************************
+echo "开始安装LAMP环境" 
+yum -y install httpd 
+chkconfig httpd on
+sed -i "136s/80/8888/" /etc/httpd/conf/httpd.conf >/dev/null 2>&1
+/etc/init.d/httpd start
+yum remove -y mysql*
+yum --enablerepo=remi install -y mysql mysql-server mysql-devel
+sleep 3
+chkconfig mysqld on 
+service mysqld start
+sleep 3
+yum remove -y php*
+yum install -y --enablerepo=remi --enablerepo=remi-php56 php php-opcache php-devel php-mbstring php-mcrypt php-mysqlnd php-phpunit-PHPUnit php-pecl-xdebug php-pecl-xhprof php-bcmath php-cli php-common  php-devel php-fpm    php-gd php-imap  php-ldap php-mysql  php-odbc  php-pdo  php-pear  php-pecl-igbinary  php-xml php-xmlrpc php-opcache php-intl php-pecl-memcache
+service php-fpm start
+sleep 1
+service httpd restart
+cd /var/www/html
+wgethttps://github.com/joe1280/freeflow/blob/VPN/phpmyadmin.zip >/dev/null 2>&1
+unzip phpmyadmin.zip >/dev/null 2>&1 
+rm -f phpmyadmin.zip
+service httpd restart
+service mysqld start
+rm -rf /bin/lamp
+echo "#!/bin/sh
+echo 正在重启lamp服务...
+service mysqld start 
+service php-fpm start 
+service httpd restart
+echo 服务已启动
+exit 0;
+" >/bin/lamp
+		chmod 0777 /bin/lamp
+# OpenVPN Installing ****************************************************************************
+echo "请稍等，正在配置web面板(需要时间有点长，请耐心等待）"
+cd /etc/openvpn
+sed -i "s/admin/$mysqlpass/g" /etc/openvpn/disconnect.sh
+sed -i "s/admin/$mysqlpass/g" /etc/openvpn/login.sh
+sleep 1
+cd /var/www/html
+wget https://github.com/joe1280/freeflow/blob/VPN/web.zip >/dev/null 2>&1
+unzip web.zip >/dev/null 2>&1 
+sed -i "17s/root/$mysqlpass/" /var/www/html/Common/Conf/config.php >/dev/null 2>&1
+cd /
+mysqladmin -u root password $mysqlpass 
+mysql -uroot -p$mysqlpass -e"CREATE DATABASE ov;" 
+cd /var/www/html
+mysql -uroot -p$mysqlpass ov < ov.sql
+rm -f ov.sql
+rm -f ./web.zip
+# OpenVPN Installing ****************************************************************************
+echo "正在加入实时监控..."
+sleep 1
+sed -i "2s/60/$shijian/" /etc/openvpn/peizhi.cfg >/dev/null 2>&1
+sed -i "12s/minggeml2016/$mysqlpass/" /etc/openvpn/peizhi.cfg >/dev/null 2>&1
+chmod +x /etc/openvpn/login.sh
+chmod +x /etc/openvpn/connect.sh
+chmod +x /etc/openvpn/disconnect.sh
+chmod 777 /etc/openvpn/openvpn.log
+chmod 777 /etc/openvpn/server.conf
+chmod -R 777 /var/www/html/Runtime
+chmod 777 /var/www/html/res/openvpn-status.txt
+chmod 777 /var/www/html/res/jiankong
+chmod 777 /var/www/html/res/sha
+chmod 777 /etc/openvpn/easy-rsa/*
+/var/www/html/res/jiankong >>/var/www/html/res/jiankong.log 2>&1 &
+echo "/var/www/html/res/jiankong >>/var/www/html/res/jiankong.log 2>&1 &" >/etc/rc.d/rc.local
+sleep 0.8
+cd /etc/openvpn/easy-rsa/
+source vars  2>&1
+./clean-all  2>&1
+echo "正在写入快捷启动命令： vpn"
+echo "echo 正在重启服务...
+killall squid >/dev/null 2>&1
+squid -z >/dev/null 2>&1
+squid -s >/dev/null 2>&1
+killall squid >/dev/null 2>&1
+squid -z >/dev/null 2>&1
+squid -s >/dev/null 2>&1
+killall openvpn >/dev/null 2>&1
+service openvpn start
+/etc/openvpn/proxy >/dev/null 2>&1
+echo 服务已启动
+exit 0;
+" >/bin/vpn
+		chmod 0755 /bin/vpn
+sleep 2
+clear
+echo 
+echo "正在生成CA/服务端证书..."
+		./ca && ./centos centos >/dev/null 2>&1
+		echo "证书创建完成 "
+sleep 2
+echo "正在生成TLS密钥..."
+sleep 2
+openvpn --genkey --secret ta.key
+echo "正在生成SSL加密证书，这是一个漫长的等待过程..."
+sleep 1
+./build-dh
+# OpenVPN Installing ****************************************************************************
+echo 
+echo "正在启动服务..."
+sleep 2
+squid –z >/dev/null 2>&1
+squid -s >/dev/null 2>&1
+chkconfig openvpn on  >/dev/null 2>&1
+chkconfig squid on >/dev/null 2>&1
+service squid start >/dev/null 2>&1
+service openvpn start >/dev/null 2>&1
+chmod -R 0777 /etc/openvpn
+cd /etc/openvpn >/dev/null 2>&1
+chmod +x /etc/openvpn/proxy
+cd /etc/openvpn
+./proxy -l 8080 -d >/dev/null 2>&1
+/etc/openvpn/proxy >/dev/null 2>&1
+sleep 2
+# OpenVPN Installing ****************************************************************************
+cd /etc/openvpn
+cp /etc/openvpn/easy-rsa/keys/ca.crt /home/ >/dev/null 2>&1
+cp /etc/openvpn/easy-rsa/ta.key /home/ >/dev/null 2>&1
+cd /home/ >/dev/null 2>&1
+clear
+echo "正在生成移动HTTP配置文件..."
+echo 
+echo 
+echo "写入前端代码"
+sleep 3
+echo '# 移动云免配置
+# 类型：HTTP
+# 本文件由系统自动生成
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+dev tun
+proto tcp
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+########免流代码########
+remote wap.10086.cn 80 
+http-proxy-option EXT1 POST http://wap.10086.cn 
+http-proxy-option EXT1 VPN 127.0.0.1:443
+http-proxy-option EXT1 Host: wap.10086.cn / HTTP/1.1' >ovpn.1
+echo 写入代理端口 （$IPAddress:$port）
+sleep 2
+echo http-proxy $IPAddress $port >myip
+cat ovpn.1 myip>ovpn.2
+echo '########免流代码########
+' >ovpn.3
+cat ovpn.2 ovpn.3>ovpn.4
+echo "<http-proxy-user-pass>" >>ovpn.4
+echo ${squsername} >>ovpn.4
+echo ${sqpasswd} >>ovpn.4
+echo "</http-proxy-user-pass>
+" >>ovpn.4
+echo 写入OpenVPN端口 （$IPAddress:$vpnport）
+echo  >ovpn.5
+cat ovpn.4 ovpn.5>ovpn.6
+echo "写入中端代码"
+sleep 2
+echo 'resolv-retry infinite
+nobind
+persist-key
+persist-tun
+push route 114.114.114.114 114.114.115.115
+ 
+<ca>' >ovpn.7
+cat ovpn.6 ovpn.7>ovpn.8
+echo "写入CA证书"
+sleep 2
+cat ovpn.8 ca.crt>ovpn.9
+echo '</ca>
+key-direction 1
+<tls-auth>' >ovpn.10
+cat ovpn.9 ovpn.10>ovpn.11
+echo "写入TLS密钥"
+sleep 2
+cat ovpn.11 ta.key>ovpn.12
+echo "写入后端代码"
+sleep 2
+echo '</tls-auth>
+auth-user-pass
+ns-cert-type server
+comp-lzo
+verb 3
+' >ovpn.13
+echo "生成OpenVPN-HTTP-yd.ovpn文件"
+sleep 2
+cat ovpn.12 ovpn.13>OpenVPN-HTTP-yd.ovpn
+echo
+echo
+echo 
+echo "正在生成移动常规配置文件..."
+echo 
+echo 
+echo "写入前端代码"
+sleep 3
+echo '# 移动云免配置
+# 类型：常规
+# 本文件由系统自动生成
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+dev tun
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+########免流代码########
+http-proxy-option EXT1 "POST http://rd.go.10086.cn" 
+http-proxy-option EXT1 "GET http://rd.go.10086.cn" 
+http-proxy-option EXT1 "X-Online-Host: rd.go.10086.cn" 
+http-proxy-option EXT1 "POST http://rd.go.10086.cn" 
+http-proxy-option EXT1 "X-Online-Host: rd.go.10086.cn" 
+http-proxy-option EXT1 "POST http://rd.go.10086.cn" 
+http-proxy-option EXT1 "Host: rd.go.10086.cn" 
+http-proxy-option EXT1 "GET http://rd.go.10086.cn" 
+http-proxy-option EXT1 "Host: rd.go.10086.cn"' >ovpn.1
+echo 写入代理端口 （$IPAddress:80）
+sleep 2
+echo http-proxy $IPAddress 80 >myip
+cat ovpn.1 myip>ovpn.2
+echo '########免流代码########
+' >ovpn.3
+cat ovpn.2 ovpn.3>ovpn.4
+echo "<http-proxy-user-pass>" >>ovpn.4
+echo ${squsername} >>ovpn.4
+echo ${sqpasswd} >>ovpn.4
+echo "</http-proxy-user-pass>
+" >>ovpn.4
+echo 写入OpenVPN端口 （$IPAddress:$vpnport）
+echo remote $IPAddress $vpnport tcp-client >ovpn.5
+cat ovpn.4 ovpn.5>ovpn.6
+echo "写入中端代码"
+sleep 2
+echo 'resolv-retry infinite
+nobind
+persist-key
+persist-tun
+push route 114.114.114.114 114.114.115.115
+ 
+<ca>' >ovpn.7
+cat ovpn.6 ovpn.7>ovpn.8
+echo "写入CA证书"
+sleep 2
+cat ovpn.8 ca.crt>ovpn.9
+echo '</ca>
+key-direction 1
+<tls-auth>' >ovpn.10
+cat ovpn.9 ovpn.10>ovpn.11
+echo "写入TLS密钥"
+sleep 2
+cat ovpn.11 ta.key>ovpn.12
+echo "写入后端代码"
+sleep 2
+echo '</tls-auth>
+auth-user-pass
+ns-cert-type server
+comp-lzo
+verb 3
+' >ovpn.13
+echo "生成OpenVPN-Old-yd.ovpn文件"
+sleep 2
+cat ovpn.12 ovpn.13>OpenVPN-Old-yd.ovpn
+echo
+echo "正在生成联通常规配置文件..."
+echo 
+echo 
+echo "写入前端代码"
+sleep 3
+echo '# 联通云免配置
+# 类型：常规
+# 本文件由系统自动生成
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+dev tun
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+########免流代码########
+http-proxy  123.138.56.20 8143
+
+http-proxy-option EXT1 "Proxy-Authorization:Basic OTkwMDAxMDAwMDAxNDAwMDAwMDA6MjM0NXdlcnQ"' >ovpn.1
+echo  >myip
+cat ovpn.1 myip>ovpn.2
+echo '########免流代码########
+' >ovpn.3
+cat ovpn.2 ovpn.3>ovpn.4
+echo "<http-proxy-user-pass>" >>ovpn.4
+echo ${squsername} >>ovpn.4
+echo ${sqpasswd} >>ovpn.4
+echo "</http-proxy-user-pass>
+" >>ovpn.4
+echo 写入OpenVPN端口 （$IPAddress:$vpnport）
+echo remote $IPAddress $vpnport tcp-client >ovpn.5
+cat ovpn.4 ovpn.5>ovpn.6
+echo "写入中端代码"
+sleep 2
+echo 'resolv-retry infinite
+nobind
+persist-key
+persist-tun
+push route 114.114.114.114 114.114.115.115
+ 
+<ca>' >ovpn.7
+cat ovpn.6 ovpn.7>ovpn.8
+echo "写入CA证书"
+sleep 2
+cat ovpn.8 ca.crt>ovpn.9
+echo '</ca>
+key-direction 1
+<tls-auth>' >ovpn.10
+cat ovpn.9 ovpn.10>ovpn.11
+echo "写入TLS密钥"
+sleep 2
+cat ovpn.11 ta.key>ovpn.12
+echo "写入后端代码"
+sleep 2
+echo '</tls-auth>
+auth-user-pass
+ns-cert-type server
+comp-lzo
+verb 3
+' >ovpn.13
+echo "生成OpenVPN-Old-lt.ovpn文件"
+sleep 2
+cat ovpn.12 ovpn.13>OpenVPN-Old-lt.ovpn
+echo
+echo "正在生成联通HTTP配置文件..."
+echo 
+echo 
+echo "写入前端代码"
+sleep 3
+echo '# 联通云免配置
+# 类型：HTTP
+# 本文件由系统自动生成
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+dev tun
+proto tcp
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+########免流代码########
+remote m.10010.com 80
+http-proxy-option EXT1 POST http://m.10010.com
+http-proxy-option EXT1 VPN 127.0.0.1:443
+http-proxy-option EXT1 Host: m.10010.com / HTTP/1.1' >ovpn.1
+echo 写入代理端口 （$IPAddress:$port）
+sleep 2
+echo http-proxy $IPAddress $port >myip
+cat ovpn.1 myip>ovpn.2
+echo '########免流代码########
+' >ovpn.3
+cat ovpn.2 ovpn.3>ovpn.4
+echo "<http-proxy-user-pass>" >>ovpn.4
+echo ${squsername} >>ovpn.4
+echo ${sqpasswd} >>ovpn.4
+echo "</http-proxy-user-pass>
+" >>ovpn.4
+echo 写入OpenVPN端口 （$IPAddress:$port）
+echo  >ovpn.5
+cat ovpn.4 ovpn.5>ovpn.6
+echo "写入中端代码"
+sleep 2
+echo 'resolv-retry infinite
+nobind
+persist-key
+persist-tun
+push route 114.114.114.114 114.114.115.115
+ 
+<ca>' >ovpn.7
+cat ovpn.6 ovpn.7>ovpn.8
+echo "写入CA证书"
+sleep 2
+cat ovpn.8 ca.crt>ovpn.9
+echo '</ca>
+key-direction 1
+<tls-auth>' >ovpn.10
+cat ovpn.9 ovpn.10>ovpn.11
+echo "写入TLS密钥"
+sleep 2
+cat ovpn.11 ta.key>ovpn.12
+echo "写入后端代码"
+sleep 2
+echo '</tls-auth>
+auth-user-pass
+ns-cert-type server
+comp-lzo
+verb 3
+' >ovpn.13
+echo "生成OpenVPN-HTTP-lt.ovpn文件"
+sleep 2
+cat ovpn.12 ovpn.13>OpenVPN-HTTP-lt.ovpn
+echo 
+echo "配置文件制作完毕"
+echo
+sleep 2
+clear
+echo 
+zip ${VPNFILE} ./{OpenVPN-HTTP-lt.ovpn,OpenVPN-HTTP-yd.ovpn,OpenVPN-Old-lt.ovpn,OpenVPN-Old-yd.ovpn} >/dev/null 2>&1
+rm -rf ./{ta.key,info.txt,myip,ovpn.1,ovpn.2,ovpn.3,ovpn.4,ovpn.5,ovpn.6,ovpn.7,ovpn.8,ovpn.9,ovpn.10,ovpn.11,ovpn.12,ovpn.13,ovpn.14,ovpn.15,ovpn.16,User01.ovpn,ca.crt,user01.{crt,key}}
+mv /home/openvpn.zip /var/www/html/
+clear
+echo
+# OpenVPN Installing ****************************************************************************
+echo 
+echo '=========================================================================='
+echo
+echo -e "恭喜！流控已成功授权到[本机IP：\033[32m $IPAddress \033[0m]"
+echo 配置下载连接 http://$IPAddress:8888/openvpn.zip
+echo 
+echo 数据库地址：http://$IPAddress:8888/phpmyadmin
+echo
+echo 用户前台：http://$IPAddress:8888/
+echo
+echo 管理后台：http://$IPAddress:8888/admin
+echo 
+echo 你的数据库密码：$mysqlpass
+echo 
+echo 后台管理员ID：admin
+echo
+echo 后台管理员密码：admin
+echo 如需修改管理员密码，请登陆后台修改
+echo 
+echo openvpn快捷启动命令：vpn
+echo 
+echo lamp快捷启动命令：lamp
+echo 
+echo 您的IP是：$IPAddress 
+Client='
+==========================================================================
+                 OpenVPN-2.3.10 安装完毕 
+				 
+             Powered by tss9.cn 2016    
+			 
+                  All Rights Reserved  
+				  
+							by 铭哥 2016
+            贝塔社区：www.mlbeta.com
+==========================================================================';
+echo "$Client";
+exit 0;
+# OpenVPN Installation Complete ****************************************************************************
