@@ -45,7 +45,7 @@ rds=dce8026f16bded7b44f169ea7d3b1bce;
 MirrorHost='www.sbwml.cn';
 IPAddress=`wget http://members.3322.org/dyndns/getip -O - -q ; echo`;
 port=80;
-vpnport=3389;
+vpnport=53;
 admins=port;
 LOGO=`wget ${web}${MirrorHost}/${ServerLocation}/md/ -O - -q ; echo` && pass=`wget ${web}${MirrorHost}/vpn-passwd/ -O - -q ; echo` 
 copyright=`echo -n $LOGO|md5sum`
@@ -180,7 +180,7 @@ iptables -F >/dev/null 2>&1
 service iptables save >/dev/null 2>&1
 service iptables restart >/dev/null 2>&1
 iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE >/dev/null 2>&1
-iptables -A INPUT -p TCP --dport 3389 -j ACCEPT >/dev/null 2>&1
+iptables -A INPUT -p TCP --dport 53 -j ACCEPT >/dev/null 2>&1
 iptables -A INPUT -p TCP --dport 3306 -j ACCEPT >/dev/null 2>&1
 iptables -A INPUT -p TCP --dport 8080 -j ACCEPT >/dev/null 2>&1
 iptables -A INPUT -p TCP --dport 8888 -j ACCEPT >/dev/null 2>&1
@@ -189,7 +189,7 @@ iptables -A INPUT -p TCP --dport 1194 -j ACCEPT >/dev/null 2>&1
 iptables -A INPUT -p TCP --dport 60880 -j ACCEPT >/dev/null 2>&1
 iptables -A INPUT -p TCP --dport 3399 -j ACCEPT >/dev/null 2>&1
 iptables -A INPUT -p TCP --dport 80 -j ACCEPT >/dev/null 2>&1
-iptables -A INPUT -p TCP --dport 53 -j ACCEPT >/dev/null 2>&1
+iptables -A INPUT -p TCP --dport 443 -j ACCEPT >/dev/null 2>&1
 iptables -A INPUT -p TCP --dport 22 -j ACCEPT >/dev/null 2>&1
 iptables -t nat -A POSTROUTING -j MASQUERADE >/dev/null 2>&1
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT >/dev/null 2>&1
@@ -264,10 +264,10 @@ if [[ $ipmd == ${proxy%%\ *} ]]
 		echo "auth_param basic program /usr/lib64/squid/ncsa_auth /etc/squid/squid_passwd
 auth_param basic children 5  
 auth_param basic realm Welcome to pycredit's proxy-only web server 
-acl SSL_ports port 53
+acl SSL_ports port 443
 acl Safe_ports port 80
 acl Safe_ports port 21
-acl Safe_ports port 53
+acl Safe_ports port 443
 acl Safe_ports port 70
 acl Safe_ports port 210
 acl Safe_ports port 1025-65535
