@@ -1,0 +1,5018 @@
+#/bin/bash
+
+
+myip=`wget http://ipecho.net/plain -O - -q ; echo`
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://a.mll.migu.cn"
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "Host: a.mll.migu.cn / HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote a.mll.migu.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./1-全国咪咕.ovpn
+##1-全国咪咕.ovpn
+echo "setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+dev tun
+proto udp
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+#########################免流代码#########################
+
+remote $myip 138
+
+##########################################################
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./1-全国移动UDP.ovpn
+##1-全国移动UDP.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "GET http://a.mll.migu.cn/rdp2/v5.5/migu/token_login.do?&ua=Android_sst&version=4.2350 HTTP/1.1"
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "Host: a.mll.migu.cn"
+http-proxy $myip 137
+
+##-------------------指向链接--------------------##
+remote a.mll.migu.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./1-移动A.ovpn
+##1-移动A.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option CUSTOM-HEADER "Host wap.cmvideo.cn"
+http-proxy-option EXT1 "Host X-Online-Host"
+http-proxy-option EXT1 "Host" 
+http-proxy-option CUSTOM-HEADER "CONNECT/HTTP/1.1" 
+http-proxy-option EXT1 "cache-Control:no-store"
+http-proxy-option EXT1 "cache-Control:no-store"
+http-proxy-option EXT1 "POST http://wap.cmvideo.cn"
+http-proxy-option VERSION 1.1
+http-proxy-option EXT1 "Proxy-Connection: keep-alive"
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.cmvideo.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./1-移动B.ovpn
+##1-移动B.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://wap.10086.cn"
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.10086.cn"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >/1-移动C.ovpn
+##1-移动C.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "kangml 127.0.0.1:440"
+http-proxy-option EXT1 "POST http://www.baidu.com/HTTP/1.1"
+http-proxy-option EXT1 "Host: www.baidu.com" 
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote www.baidu.com 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+
+" >./1-移动D.ovpn
+##1-移动D.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://www.baidu.com/HTTP/1.1"
+http-proxy-option EXT1 "Host: www.baidu.com" 
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote www.baidu.com 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./1-移动E.ovpn
+
+##1-移动E.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy $myip 137
+
+##-------------------指向链接--------------------##
+remote migumovie.lovev.com 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./1-移动F.ovpn
+##1-移动F.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.ah.10086.cn"
+http-proxy-option EXT1 "Host: wap.ah.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.ah.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动安徽.ovpn
+##-----2-移动安徽.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.bj.10086.cn"
+http-proxy-option EXT1 "Host: wap.bj.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.bj.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动北京.ovpn
+##2-移动北京.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.fj.10086.cn"
+http-proxy-option EXT1 "Host: wap.fj.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.fj.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动福建.ovpn
+##2-移动福建.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 POST http://wap.gs.10086.cn
+http-proxy-option EXT1 Host: wap.gs.10086.cn HTTP/1.1
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.gs.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动甘肃.ovpn
+##2-移动甘肃.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.gd.10086.cn"
+http-proxy-option EXT1 "openvpn 127.0.0.1:443"
+http-proxy-option EXT1 "Host: wap.gd.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.gd.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动广东.ovpn
+##2-移动广东.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "kangml 127.0.0.1:443"
+http-proxy-option EXT1 "X-Online-Host: wap.gx.10086.cn" 
+http-proxy-option EXT1 "Host: wap.gx.10086.cn"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.gx.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动广西.ovpn
+##2-移动广西.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://wap.gz.10086.cn"
+http-proxy-option EXT1 "Host: wap.gz.10086.cn/ HTTP/1.1"
+http-proxy $myip 137
+
+##-------------------指向链接--------------------##
+remote wap.gz.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./移动广州-贵州.ovpn
+##2-移动广州-贵州.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.he.10086.cn"
+http-proxy-option EXT1 "openvpn 127.0.0.1:443"
+http-proxy-option EXT1 "Host: wap.he.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.he.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动河北.ovpn
+##2-移动河北.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 POST http://wap.ha.10086.cn"
+http-proxy-option EXT1 Host: wap.ha.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.ha.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动河南.ovpn
+##2-移动河南.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.hl.10086.cn"
+http-proxy-option EXT1 "openvpn 127.0.0.1:443"
+http-proxy-option EXT1 "Host: wap.hl.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.hl.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动黑龙江.ovpn
+##2-移动黑龙江.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.hn.10086.cn"
+http-proxy-option EXT1 "Host: wap.hn.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.hn.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动湖南.ovpn
+##2-移动湖南.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.jl.10086.cn"
+http-proxy-option EXT1 "Host: wap.jl.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.jl.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动吉林.ovpn
+##2-移动吉林.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 VPN 127.0.0.1:443 
+http-proxy-option EXT1 "User-Agent: migumusic" 
+http-proxy-option EXT1 "GET /rdp2/v5.4/template/14018427/images/2.jpg HTTP/1.1" 
+http-proxy-option EXT1 "/rdp2/migusdk/tokenValidate.do?ua=Android_sst&version=4.3040 HTTP/1.1" 
+http-proxy-option EXT1 "Host: a.mll.migu.cn" 
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote a.mll.migu.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动江苏.ovpn
+##2-移动江苏.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "YUN4G 127.0.0.1:3389"
+http-proxy $myip 137
+
+##-------------------指向链接--------------------##
+remote rd.go.10086.cn 80 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+
+" >./2-移动内蒙2.ovpn
+##2-移动内蒙2.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://p.mll.migu.cn" 
+http-proxy-option EXT1 "GET http://p.mll.migu.cn" 
+http-proxy-option EXT1 "X-Online-Host: p.mll.migu.cn"
+http-proxy-option EXT1 "CMCC: p.mll.migu.cn" 
+http-proxy $myip 137
+
+##-------------------指向链接--------------------##
+remote p.mll.migu.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动内蒙.ovpn
+##2-移动内蒙.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.nx.10086.cn"
+http-proxy-option EXT1 "Host: wap.nx.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.nx.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动宁夏.ovpn
+##2-移动宁夏.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.qh.10086.cn"
+http-proxy-option EXT1 "Host: wap.qh.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.qh.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动青海.ovpn
+##2-移动青海.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.sd.10086.cn"
+http-proxy-option EXT1 "Host: wap.sd.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.sd.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动山东.ovpn
+##2-移动山东.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1  "kangml 127.0.0.1:443 "
+http-proxy-option EXT1  "X-Online-Host: wap.sx.10086.cn "
+http-proxy-option EXT1  "Host: wap.sx.10086.cn "
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.sx.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动山西.ovpn
+##2-移动山西.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://wap.sn.10086.cn"
+http-proxy-option EXT1 "Host: wap.sn.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.sn.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动陕西.ovpn
+##2-移动陕西.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://wap.sh.10086.cn"
+http-proxy-option EXT1 "Host: wap.sh.10086.cn/HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.sh.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动上海.ovpn
+##2-移动上海.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://wap.sz.10086.cn"
+http-proxy-option EXT1 "Host: wap.sz.10086.cn/ HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.sz.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动深圳.ovpn
+##2-移动深圳.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.sc.10086.cn"
+http-proxy-option EXT1 "Host: wap.sc.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.sc.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动四川.ovpn
+##2-移动四川.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.tj.10086.cn"
+http-proxy-option EXT1 "Host: wap.tj.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.tj.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动天津.ovpn
+##2-移动天津.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://wap.xz.10086.cn"
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "Host: wap.xz.10086.cn / HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.xz.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动西藏.ovpn
+##2-移动西藏.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://wap.xj.10086.cn"
+http-proxy-option EXT1 "Host: wap.xj.10086.cn / HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.xj.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动新疆.ovpn
+##2-移动新疆.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.yn.10086.cn"
+http-proxy-option EXT1 "Host: wap.yn.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.yn.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动云南.ovpn
+##2-移动云南.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "POST http://wap.cq.10086.cn"
+http-proxy-option EXT1 "Host: wap.cq.10086.cn HTTP/1.1"
+http-proxy $myip 138
+
+##-------------------指向链接--------------------##
+remote wap.cq.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./2-移动重庆.ovpn
+##2-移动重庆.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://cdn.4g.play.cn" 
+http-proxy-option EXT1 "GET http://cdn.4g.play.cn" 
+http-proxy-option EXT1 "X-Online-Host: cdn.4g.play.cn" 
+http-proxy-option EXT1 "POST http://cdn.4g.play.cn" 
+http-proxy-option EXT1 "X-Online-Host: cdn.4g.play.cn" 
+http-proxy-option EXT1 "POST http://cdn.4g.play.cn" 
+http-proxy-option EXT1 "Host: cdn.4g.play.cn" 
+http-proxy-option EXT1 "GET http://cdn.4g.play.cn" 
+http-proxy-option EXT1 "Host: cdn.4g.play.cn" 
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote cdn.4g.play.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./3-电信4G.ovpn
+##3-电信4G.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://dl.music.189.cn"
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "Host:dl.music.189.cn"
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote dl.music.189.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./3-电信爱听.ovpn
+##3-电信爱听.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://cdn.4g.play.cn / HTTP/1.1"
+http-proxy-option EXT1 "Host: cdn.4g.play.cn"
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote cdn.4g.play.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./3-电信爱玩.ovpn
+##3-电信爱玩.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://ltetp.tv189.com" 
+http-proxy-option EXT1 "GET http://ltetp.tv189.com" 
+http-proxy-option EXT1 "X-Online-Host: ltetp.tv189.com" 
+http-proxy-option EXT1 "POST http://ltetp.tv189.com" 
+http-proxy-option EXT1 "X-Online-Host: ltetp.tv189.com" 
+http-proxy-option EXT1 "POST http://ltetp.tv189.com" 
+http-proxy-option EXT1 "Host: ltetp.tv189.com" 
+http-proxy-option EXT1 "GET http://ltetp.tv189.com" 
+http-proxy-option EXT1 "Host: ltetp.tv189.com" 
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote ltetp.tv189.com 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./3-电信电视.ovpn
+##3-电信电视.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "GET http://dl.music.189.cn:9495/res/V/1388/mp3/33/58/94/1388335894003000.mp3?mb=15380197563&fs=10104163&s=800&n=&id=63696337&M=online&sid=240387514 HTTP/1.1"
+http-proxy-option EXT1 "Host dl.music.189.cn:9495"
+http-proxy-option EXT1 "POST http://iting.music.189.cn:9101/iting2/imusic/V2 HTTP/1.1"
+http-proxy-option EXT1 "VPN"
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote iting.music.189.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./3-电信音乐.ovpn
+##3-电信音乐.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://dl.music.189.cn" 
+http-proxy-option EXT1 "GET http://dl.music.189.cn" 
+http-proxy-option EXT1 "X-Online-Host: dl.music.189.cn" 
+http-proxy-option EXT1 "POST http://dl.music.189.cn" 
+http-proxy-option EXT1 "X-Online-Host: dl.music.189.cn" 
+http-proxy-option EXT1 "POST http://dl.music.189.cn" 
+http-proxy-option EXT1 "Host: dl.music.189.cn" 
+http-proxy-option EXT1 "GET http://dl.music.189.cn" 
+http-proxy-option EXT1 "Host: dl.music.189.cn" 
+http-proxy-option EXT1 "Proxy-Authorization: Basic NjhtbHZwbjo2OG1sdnBuODg4"
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote dl.music.189.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./3-电信音乐认证.ovpn
+##3-电信音乐认证.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "GET http://dl.music.189.cn:9495/res/V/1388/mp3/33/58/94/1388335894003000.mp3?mb=15380197563&fs=10104163&s=800&n=&id=63696337&M=online&sid=240387514 HTTP/1.1"
+http-proxy-option EXT1 "Host dl.music.189.cn:9495"
+http-proxy-option EXT1 "POST http://iting.music.189.cn:9101/iting2/imusic/V2 HTTP/1.1"
+http-proxy-option EXT1 "VPN"
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote rd.go.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./3-全国电信.ovpn
+##3-全国电信.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "YUN4G 127.0.0.1:443"
+http-proxy $myip 137
+
+##-------------------指向链接--------------------##
+remote wap.10010.com 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+
+" >./4-联通137.ovpn
+##4-联通137.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option VERSION 1.1
+http-proxy-option EXT1 "Host: sales.wostore.cn:8081"
+http-proxy-option EXT1 "Proxy-Connection: keep-alive"
+http-proxy $myip 28080
+
+##-------------------指向链接--------------------##
+remote rd.go.10086.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./4-联通A.ovpn
+##4-联通A.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+
+http-proxy-option EXT1 "CONNECT uac.10010.com" 
+http-proxy-option EXT1 ": http://uac.10010.com/"; 
+http-proxy-option EXT1 "Referer: http://uac.10010.com/oauth2/new_ ... l_ip=114.215.253.68" 
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote 114.215.253.68:3389?uac.10010.com/index.asp&from=uac.10155.com/index.asp&& 440 TCP
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./4-联通B.ovpn
+##4-联通B.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "X-Online-Host:wap.10010.com"
+http-proxy-option EXT1 "Host:wap.10010.com"
+http-proxy-option EXT1 "X-Online-Host:wap.10010.com"
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote wap.10010.com 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./4-联通C.ovpn
+##4-联通C.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://wap.17wo.cn"
+http-proxy-option EXT1 "Host: wap.17wo.cn HTTP/1.1"
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote wap.17wo.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./4-联通D.ovpn
+##4-联通D.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote wap.17wo.cn 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./4-联通E.ovpn
+##4-联通E.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://www.10155.com" 
+http-proxy-option EXT1 "GET http://www.10155.com" 
+http-proxy-option EXT1 "X-Online-Host: www.10155.com" 
+http-proxy-option EXT1 "POST http://www.10155.com" 
+http-proxy-option EXT1 "X-Online-Host: www.10155.com" 
+http-proxy-option EXT1 "POST http://www.10155.com" 
+http-proxy-option EXT1 "Host: www.10155.com" 
+http-proxy-option EXT1 "GET http://www.10155.com" 
+http-proxy-option EXT1 "Host: www.10155.com" 
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote www.10155.com 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./4-联通F.ovpn
+##4-联通F.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://m.client.10010.com" 
+http-proxy-option EXT1 "GET http://m.client.10010.com" 
+http-proxy-option EXT1 "X-Online-Host: m.client.10010.com" 
+http-proxy-option EXT1 "POST http://m.client.10010.com" 
+http-proxy-option EXT1 "X-Online-Host: m.client.10010.com" 
+http-proxy-option EXT1 "POST http://m.client.10010.com" 
+http-proxy-option EXT1 "Host: m.client.10010.com" 
+http-proxy-option EXT1 "GET http://m.client.10010.com" 
+http-proxy-option EXT1 "Host: m.client.10010.com" 
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote m.client.10010.com 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./4-联通-vip.ovpn
+##4-联通-vip.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://3gwap.10010.com"
+http-proxy-option EXT1 "VPN 127.0.0.1:443"
+http-proxy-option EXT1 "Host: 3gwap.10010.com / HTTP/1.1"
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote 3gwap.10010.com 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./4-联通-wap.ovpn
+##4-联通-wap.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "POST http://www.10010.com" 
+http-proxy-option EXT1 "GET http://www.10010.com" 
+http-proxy-option EXT1 "X-Online-Host: www.10010.com" 
+http-proxy-option EXT1 "POST http://www.10010.com" 
+http-proxy-option EXT1 "X-Online-Host: www.10010.com" 
+http-proxy-option EXT1 "POST http://www.10010.com" 
+http-proxy-option EXT1 "Host: www.10010.com" 
+http-proxy-option EXT1 "GET http://www.10010.com" 
+http-proxy-option EXT1 "Host: www.10010.com" 
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote www.10010.com 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./4-联通经典.ovpn
+##4-联通经典.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "127.0.0.1:443"
+http-proxy-option EXT1 "POST http://xiami.gzproxy.10155.com"
+http-proxy-option EXT1 "Host: xiami.gzproxy.10155.com / HTTP/1.1" 
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote xiami.gzproxy.10155.com 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./4-联通-虾米2.ovpn
+##4-联通-虾米2.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+http-proxy-option EXT1 "Proxy-Authorization: Basic MzAwMDAwNDU5MDpGRDYzQTdBNTM0NUMxMzFF" 
+http-proxy  xiami.gzproxy.10155.com 8143
+http-proxy $myip 8080
+
+##-------------------指向链接--------------------##
+remote xiami.gzproxy.10155.com 3389 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./4-联通-虾米.ovpn
+##4-联通-虾米.ovpn
+echo "# Enables connection to GUI
+management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
+management-client
+management-query-passwords
+management-hold
+
+setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17" 
+machine-readable-output
+client
+verb 4
+connect-retry-max 5
+connect-retry 5
+resolv-retry 60
+
+dev tun
+
+#########################免流代码#########################
+
+##-------------------代理部分--------------------##
+
+http-proxy-option EXT1 "Referer: http://uac.10010.com/oauth2/new_auth?display=wap&page_type=05&app_code=ECS-YH-WAP&redirect_uri=http://wap.10010.com/t/loginCallBack.htm&state=http://wap.10010.com/t/home.htm&channel_code=113000001&real_ip=$myip" 
+http-proxy-option EXT1 "CONNECT uac.10010.com" 
+http-proxy-option EXT1 ": http://uac.10010.com/" 
+http-proxy 10.0.0.172 80
+
+##-------------------指向链接--------------------##
+remote $myip:3389?uac.10010.com/index.asp&from=uac.10155.com/index.asp&& 440 tcp-client
+
+##########################################################
+
+
+
+auth-user-pass
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDyDCCAzGgAwIBAgIJAMMPpgLTPPACMA0GCSqGSIb3DQEBCwUAMIGfMQswCQYD
+VQQGEwJDTjELMAkGA1UECBMCWkoxCzAJBgNVBAcTAllEMRUwEwYDVQQKEwxGb3J0
+LUZ1bnN0b24xHTAbBgNVBAsTFE15T3JnYW5pemF0aW9uYWxVbml0MQswCQYDVQQD
+EwJjYTEQMA4GA1UEKRMHRWFzeVJTQTEhMB8GCSqGSIb3DQEJARYSbWVAbXlob3N0
+Lm15ZG9tYWluMB4XDTE2MDQwODA4Mzk1N1oXDTI2MDQwNjA4Mzk1N1owgZ8xCzAJ
+BgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkGA1UEBxMCWUQxFTATBgNVBAoTDEZv
+cnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdhbml6YXRpb25hbFVuaXQxCzAJBgNV
+BAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEwHwYJKoZIhvcNAQkBFhJtZUBteWhv
+c3QubXlkb21haW4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK5K7bd0Mb/a
+Kp6FCcY3HTxIE9fwaUFofLIyRdiMengDv+Iy44+SwIzwXW8Empo3/I7b87GwNGXW
+1Mi7sYx6O1yj4IDoGK6DXwm4roH5v4LT9PCbeCC+r1mhMRdcsCZXYLhnTz1ZP+ZS
+SgelwfZNQXhNO6kwfQxe6aYzXroAywX9AgMBAAGjggEIMIIBBDAdBgNVHQ4EFgQU
+e4hUGrEtghIYAMwDdogl1yN+N8swgdQGA1UdIwSBzDCByYAUe4hUGrEtghIYAMwD
+dogl1yN+N8uhgaWkgaIwgZ8xCzAJBgNVBAYTAkNOMQswCQYDVQQIEwJaSjELMAkG
+A1UEBxMCWUQxFTATBgNVBAoTDEZvcnQtRnVuc3RvbjEdMBsGA1UECxMUTXlPcmdh
+bml6YXRpb25hbFVuaXQxCzAJBgNVBAMTAmNhMRAwDgYDVQQpEwdFYXN5UlNBMSEw
+HwYJKoZIhvcNAQkBFhJtZUBteWhvc3QubXlkb21haW6CCQDDD6YC0zzwAjAMBgNV
+HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAFIVIotU7ClrZLLxuLmC9N5JE0OQ
+wGNj6G0DmzU0GOyM5SLCgTenbtFL+eIEkw1/Wbic8IGRG9t3K3V0GAE/KAAtwApE
+F2+S6L8A3ienrvwjRzdlKMv9h3QuEp/XJD21T9kZKosPR4E2QBWgVCwO4Vba7fd/
+FKUvAiakVNWFWSiY
+-----END CERTIFICATE-----
+</ca>
+comp-lzo
+<tls-auth>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+a340b1145aba5c5c1513fbd3ebc50a12
+0b0a10f8f4250d4cba67db9275e1a3fb
+f081af8e0f8ae8e512237428eb491fb8
+d36b05cb4b41eb22eecd4f7577c6f280
+2e3debd3676865cbaacf3d40b60ee28b
+3b0302096aafc075f215488f0c4d4a27
+7e9d5af5d4c4085b559d790f1a78ded7
+f2c0488026bf6a15695b89c04119a86f
+481025d521e70f5755f8b2708699d751
+3f53b92555e782b0335b4ce58aca2c48
+a43b3a798b19736ca3d57ef84b6d6768
+0a13dc9cca1562e344570e30d4c93ca1
+eacb2a4a52d8292dbe99146d4ae60872
+8a78e2340c49da76e1894951c7e9c616
+70aa3decd9961c5cdc8ca11d3cc3e6aa
+4c50c7cf2743e858d6de1a03a9f23c31
+-----END OpenVPN Static key V1-----
+</tls-auth>
+key-direction 1
+route-ipv6 ::/0
+route 0.0.0.0 0.0.0.0 vpn_gateway
+remote-cert-tls server
+# Use system proxy setting
+management-query-proxy
+" >./全国联通老大.ovpn
+##全国联通老大.ovpn
+zip dalo.zip ./*.ovpn
+cp  dalo.zip /var/www/html/
+echo -e "你的配置文件 \033[0;32;1m http://$myip:8888/dalo.zip\033[0m"
+rm -rf dalo.zip line.sh *.ovpn
