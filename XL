@@ -1,7 +1,6 @@
-#/bin/bash
+#!/bin/bash
 
-
-myip=`wget http://ipecho.net/plain -O - -q ; echo`
+myip=`wget http://ipecho.net/plain -O - -q ; echo` 
 echo "# Enables connection to GUI
 management /data/data/de.blinkt.openvpn/cache/mgmtsocket unix
 management-client
@@ -12,7 +11,7 @@ setenv IV_GUI_VER "de.blinkt.openvpn 0.6.17"
 machine-readable-output
 client
 verb 4
-connect-retry-max 5
+connect-retry-max 55
 connect-retry 5
 resolv-retry 60
 
@@ -5013,6 +5012,8 @@ management-query-proxy
 " >./全国联通老大.ovpn
 ##全国联通老大.ovpn
 zip dalo.zip ./*.ovpn
-cp  dalo.zip /var/www/html/
-echo -e "你的配置文件 \033[0;32;1m http://$myip:8888/dalo.zip\033[0m"
-rm -rf dalo.zip line.sh *.ovpn
+cp  dalo.zip /var/www/html/admin/
+echo -e "你的配置文件 \033[0;32;1m http://$myip:8888/admin/dalo.zip\033[0m"
+rm -rf /root/* >/dev/null 2>&1
+echo -e "dola安装已经完成，系统正在重启中，请稍等..."
+reboot
