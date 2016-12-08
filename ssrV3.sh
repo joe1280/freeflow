@@ -553,7 +553,7 @@ function start_supervisor(){
 
                # 安装 SSR 魔改版前端
 
-function install_ss-panel-v3-mod(){
+function install_ss_panel_v3_mod(){
 
     echo
     echo    配置 SSR 魔改版 前端
@@ -1466,7 +1466,7 @@ function choose(){
          disable_selinux
          stop_iptables
          start_crontab
-         install_ss-panel-v3-mod
+         install_ss_panel_v3_mod
          set_crontab
          del_file
          check_datetime
@@ -1516,7 +1516,7 @@ function choose(){
          install_libsodium
          install_SSR
          start_supervisor
-         install_ss-panel-v3-mod
+         install_ss_panel_v3_mod
          set_crontab
          del_file
          check_datetime
@@ -1530,7 +1530,7 @@ function choose(){
         exit 1
 
     fi
-}
 
+}
 checkos
 choose
