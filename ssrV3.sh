@@ -569,7 +569,7 @@ function install_ss_panel_v3_mod(){
 
     cd /home/wwwroot/$domain
 
-    git clone https://github.com/glzjin/ss-panel-v3-mod.git tmp 
+    git clone https://git.oschina.net/qt1280/ss-panel-v3-mod.git tmp 
 
     mv tmp/.git .  
 
