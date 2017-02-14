@@ -1,0 +1,4 @@
+#!/bin/bash
+wget https://git.io/vpn -O openvpn-install.sh && bash openvpn-install.sh
+yum -y install lrzsz
+sz clientj.ovpn
