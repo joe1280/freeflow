@@ -235,7 +235,9 @@ nobind
 persist-key
 persist-tun
 auth-user-pass
-ns-cert-type server
+#ns-cert-type server
+remote-cert-tls server
+auth-nocache
 redirect-gateway
 keepalive 20 180
 comp-lzo
