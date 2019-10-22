@@ -49,10 +49,11 @@ echo "local 0.0.0.0
 port $_port
 proto tcp
 dev tun
-ca /etc/openvpn/easy-rsa/2.0/keys/ca.crt
-cert /etc/openvpn/easy-rsa/2.0/keys/server.crt
-key /etc/openvpn/easy-rsa/2.0/keys/server.key
-dh /etc/openvpn/easy-rsa/2.0/keys/dh1024.pem
+ca /etc/openvpn/easy-rsa3.0/ca.crt
+cert /etc/openvpn/easy-rsa3.0/server.crt
+key /etc/openvpn/easy-rsa3.0/server.key
+dh /etc/openvpn/easy-rsa3.0/dh.pem
+tls-crypt /etc/openvpn/easy-rsa3.0/tc.key
 ifconfig-pool-persist ipp.txt
 server 192.1.0.0 255.255.255.0
 push \"redirect-gateway\"
@@ -208,8 +209,8 @@ nohup /etc/openvpn/web/res/jiankong >>/etc/openvpn/web/res/jiankong.log 2>&1 &
 echo “安装openvpn”
 cd /etc/openvpn/
 #wget https://gitee.com/qt1280/Bldog/raw/master/easy-rsa.tar.gz >/dev/null 2>&1
-wget https://github.com/joe1280/freeflow/raw/master/easy-rsa.zip >/dev/null 2>&1
-unzip easy-rsa.zip
+wget https://github.com/joe1280/freeflow/raw/master/easy-rsa3.0.zip >/dev/null 2>&1
+unzip easy-rsa3.0.zip
 #tar -zxvf easy-rsa.tar.gz >/dev/null 2>&1
 
 
