@@ -179,8 +179,8 @@ cp -rf /etc/openvpn/web/httpd.conf /etc/httpd/conf/httpd.conf
 service httpd restart >/dev/null 2>&1
 fi
 cd /etc/openvpn
-gzexe login.sh >/dev/null 2>&1
-gzexe logout.sh >/dev/null 2>&1
+#gzexe login.sh >/dev/null 2>&1
+#gzexe logout.sh >/dev/null 2>&1
 rm -f 1 >/dev/null 2>&1
 rm -f 2 >/dev/null 2>&1
 rm -f 3 >/dev/null 2>&1
