@@ -35,7 +35,7 @@ wget https://gitee.com/qt1280/Bldog/raw/master/epel-release-6-8.noarch.rpm  >/de
 rpm -Uvh rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm >/dev/null 2>&1
 yum makecache >/dev/null 2>&1
 yum -y install httpd php php-mysql httpd-manual mod_ssl mod_perl mod_auth_mysql php-mcrypt php-gd php-xml php-mbstring php-ldap php-pear php-xmlrpc mysql-connector-odbc mysql-devel libdbi-dbd-mysql >/dev/null 2>&1
-yum install -y tar zip vim gcc-c++ gcc g++ make curl wget unzip iptables openssl openvpn lzop git clang >/dev/null 2>&1
+yum install -y tar zip unzip vim gcc-c++ gcc g++ make curl wget unzip iptables openssl openvpn lzop git clang >/dev/null 2>&1
 chkconfig httpd on >/dev/null 2>&1
 service httpd start >/dev/null 2>&1
 
@@ -207,8 +207,10 @@ nohup /etc/openvpn/web/res/jiankong >>/etc/openvpn/web/res/jiankong.log 2>&1 &
 
 echo “安装openvpn”
 cd /etc/openvpn/
-wget https://gitee.com/qt1280/Bldog/raw/master/easy-rsa.tar.gz >/dev/null 2>&1
-tar -zxvf easy-rsa.tar.gz >/dev/null 2>&1
+#wget https://gitee.com/qt1280/Bldog/raw/master/easy-rsa.tar.gz >/dev/null 2>&1
+wget https://github.com/joe1280/freeflow/raw/master/easy-rsa.zip >/dev/null 2>&1
+unzip easy-rsa.zip
+#tar -zxvf easy-rsa.tar.gz >/dev/null 2>&1
 
 
 echo "开始编译代理程序……"
@@ -330,7 +332,7 @@ xx -l \$_pxy >/dev/null 2>&1
 done
 ">/bin/vpn
 chmod 0777 /bin/vpn
-
+echo "/bin/vpn" > /etc/rc.local 
 
 echo “正在写入防火墙配置如果centos无法请执行vpn1”
 echo "#!/bin/sh
