@@ -52,7 +52,7 @@ dev tun
 ca /etc/openvpn/easy-rsa/2.0/keys/ca.crt
 cert /etc/openvpn/easy-rsa/2.0/keys/server.crt
 key /etc/openvpn/easy-rsa/2.0/keys/server.key
-dh /etc/openvpn/easy-rsa/2.0/keys/dh1024.pe
+dh /etc/openvpn/easy-rsa/2.0/keys/dh1024.pem
 ifconfig-pool-persist ipp.txt
 server 192.1.0.0 255.255.255.0
 push \"redirect-gateway\"
